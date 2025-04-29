@@ -127,10 +127,11 @@ function App() {
     }
   }
 
-  window.addEventListener("keypress", (e) => {
+  window.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key === "s") {
       e.preventDefault();
       saveFile();
+      console.log("ctrls");
     }
   });
 
