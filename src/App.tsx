@@ -127,6 +127,13 @@ function App() {
     }
   }
 
+  window.addEventListener("keypress", (e) => {
+    if (e.ctrlKey && e.key === "s") {
+      e.preventDefault();
+      saveFile();
+    }
+  });
+
   return (
     <>
       <div class="toolbar">
