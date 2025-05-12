@@ -23,12 +23,13 @@
     "@codemirror/lang-xml": "^6.1.0",
     "@codemirror/lint": "^6.8.5",
     "@replit/codemirror-lang-csharp": "^6.2.0",
+    "baboolastyles": "^0.0.7",
     "codemirror": "^6.0.1",
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.6"
   },
   "devDependencies": {
-    "typescript": "~5.7.2",
-    "vite": "^6.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.6"
   }
 }
