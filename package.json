@@ -1,7 +1,7 @@
 {
   "name": "baboolatexteditor",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,7 +23,7 @@
     "@codemirror/lang-xml": "^6.1.0",
     "@codemirror/lint": "^6.8.5",
     "@replit/codemirror-lang-csharp": "^6.2.0",
-    "baboolastyles": "^0.1.3",
+    "baboolastyles": "^0.1.4",
     "codemirror": "^6.0.1",
     "solid-js": "^1.9.6"
   },
