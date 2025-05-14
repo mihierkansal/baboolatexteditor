@@ -1,5 +1,12 @@
 import { basicSetup, EditorView, minimalSetup } from "codemirror";
-import { createEffect, createMemo, createSignal, on, onMount } from "solid-js";
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+  onMount,
+  Show,
+} from "solid-js";
 import "./index.css";
 import { javascript } from "@codemirror/lang-javascript";
 import { html } from "@codemirror/lang-html";
@@ -107,6 +114,7 @@ function App() {
           extensions: [
             ...(ls ? [ls] : []),
             isCode ? basicSetup : minimalSetup,
+            EditorView.lineWrapping,
             EditorView.updateListener.of(() => {
               console.log("chng");
               contents[1](_editor.state.doc.toString());
@@ -120,7 +128,7 @@ function App() {
     );
   });
 
-  function saveFile() {
+  function download() {
     if (filename[0]().includes(".")) {
       downloadTextFile(filename[0](), contents[0]());
     } else {
@@ -128,11 +136,21 @@ function App() {
     }
   }
 
+  const fileHandle = createSignal<FileSystemHandle>();
+
   window.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.key === "s") {
+    if (e.key === "s" && e.ctrlKey) {
       e.preventDefault();
-      saveFile();
-      console.log("ctrls");
+      //@ts-ignore
+      if (!!window.showSaveFilePicker) {
+        if (fileHandle[0]() && !e.shiftKey) {
+          writeToFile(fileHandle[0]()!, contents[0]());
+        } else {
+          saveAs();
+        }
+      } else {
+        download();
+      }
     }
   });
 
@@ -140,37 +158,62 @@ function App() {
     <>
       <div class="toolbar">
         <button
-          onClick={() => {
-            const inp = document.createElement("input");
-            inp.type = "file";
-            inp.onchange = (e) => {
-              filename[1]("");
-              const f = (e.target as HTMLInputElement).files?.[0];
-              if (f) {
-                const r = new FileReader();
-                r.onload = (e) => {
-                  const d = e.target!.result as string;
-                  contents[1](d);
-                  filename[1](f.name);
-                };
-                r.readAsText(f);
-              }
-            };
-            inp.hidden = true;
-            document.body.appendChild(inp);
-            inp.click();
+          onClick={async () => {
+            //@ts-ignore
+            if (window.showOpenFilePicker) {
+              const _fileHandle = await openFile();
+              fileHandle[1](_fileHandle);
+              const file = await _fileHandle.getFile();
+              setEditorContents(file);
+            } else {
+              const inp = document.createElement("input");
+              inp.type = "file";
+              inp.onchange = (e) => {
+                const f = (e.target as HTMLInputElement).files?.[0];
+                if (f) {
+                  setEditorContents(f);
+                }
+              };
+              inp.hidden = true;
+              document.body.appendChild(inp);
+              inp.click();
+            }
           }}
         >
           <span>Open From PC</span>
         </button>
-        <button
-          onClick={() => {
-            saveFile();
-          }}
+
+        <Show
+          fallback={
+            <button
+              onClick={() => {
+                download();
+              }}
+            >
+              <span>Download</span>
+            </button>
+          }
+          /* @ts-ignore */
+          when={!!window.showSaveFilePicker}
         >
-          <span>Save File</span>
-        </button>
+          <button
+            onClick={async () => {
+              saveAs();
+            }}
+          >
+            <span>Save As</span>
+          </button>
+          <button
+            disabled={!fileHandle[0]()}
+            onClick={async () => {
+              await writeToFile(fileHandle[0]()!, contents[0]());
+            }}
+          >
+            <span>Save</span>
+          </button>
+        </Show>
         <input
+          readOnly={!!fileHandle[0]()}
           value={filename[0]()}
           onInput={(e) => {
             filename[1](e.target.value);
@@ -185,6 +228,25 @@ function App() {
       ></div>
     </>
   );
+
+  function setEditorContents(file: File) {
+    const r = new FileReader();
+    r.onload = (e) => {
+      filename[1]("");
+      const d = e.target!.result as string;
+      contents[1](d);
+
+      filename[1](file.name);
+    };
+    r.readAsText(file);
+  }
+
+  async function saveAs() {
+    const _fileHandle = await saveFile(filename[0]());
+    fileHandle[1](_fileHandle);
+    filename[1](_fileHandle.name);
+    await writeToFile(_fileHandle, contents[0]());
+  }
 }
 
 function downloadTextFile(filename: string, content: string) {
@@ -195,6 +257,32 @@ function downloadTextFile(filename: string, content: string) {
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
+}
+
+async function writeToFile(fileHandle: FileSystemHandle, content: string) {
+  const writableStream =
+    //@ts-ignore
+    (await fileHandle.createWritable()) as FileSystemWritableFileStream;
+  await writableStream.write(content);
+  await writableStream.close();
+}
+
+async function openFile() {
+  const options = {};
+
+  // @ts-ignore
+  const [fileHandle] = await window.showOpenFilePicker(options);
+  return fileHandle;
+}
+
+async function saveFile(name: string) {
+  const options = {
+    suggestedName: name,
+  };
+
+  // @ts-ignore
+  const fileHandle = await window.showSaveFilePicker(options);
+  return fileHandle as FileSystemHandle;
 }
 
 export default App;
