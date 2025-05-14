@@ -1,6 +1,6 @@
 {
   "name": "baboolatexteditor",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -31,5 +31,17 @@
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.6"
-  }
+  },
+  "description": "Text editor, supporting syntax highlighting",
+  "main": "src/App.tsx",
+  "repository": {
+    "type": "git",
+    "url": "@mihierkansal/baboolatexteditor"
+  },
+  "keywords": [
+    "Text",
+    "editor"
+  ],
+  "author": "Mihier",
+  "license": "MIT"
 }
