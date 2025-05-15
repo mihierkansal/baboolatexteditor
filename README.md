@@ -4,7 +4,8 @@ _Not highly recommended. It's not developer friendly per se, and is mainly there
 
 # Usage (as component)
 
-Basically a text editor, with save, open, etc. Know that it won't work in an iframe. Its styles may cascade to your page; prevent this by adding class="nobaboolastyles" on the >html tag, and wrapping the <TextEditor in a <div class="baboolastyles".
+Basically a text editor, with save, open, etc. Know that it won't work in an iframe. Its styles may cascade to your page; prevent this by adding class="nobaboolastyles" on the >html tag, and wrapping the <TextEditor in a <div class="baboolastyles".  
+  
 import TextEditor from "baboolatexteditor/src/App.tsx"
 
 
