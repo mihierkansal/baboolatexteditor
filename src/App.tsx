@@ -35,6 +35,8 @@ function App() {
 
   let editor: any;
 
+  let editorRef!: HTMLDivElement;
+
   onMount(() => {
     createEffect(
       on(ext, () => {
@@ -106,7 +108,7 @@ function App() {
         }
 
         const initialText = contents[0](); //editor?.state.doc.toString();
-        const targetElement = document.querySelector(".editor")!;
+        const targetElement = editorRef;
         targetElement.innerHTML = "";
 
         const _editor = new EditorView({
@@ -222,6 +224,7 @@ function App() {
       </div>
       <div
         class="editor"
+        ref={editorRef}
         onClick={() => {
           editor.focus();
         }}
