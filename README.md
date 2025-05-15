@@ -1,11 +1,22 @@
-## Usage
+_Not highly recommended. It's not developer friendly per se, and is mainly there to integrate with Baboola OS Emulator._
+
+# Installation as component: npm i baboolatexteditor
+
+# Usage (as component)
+
+Basically a text editor, with save, open, etc. Know that it won't work in an iframe. Its styles may cascade to your page; prevent this by adding class="nobaboolastyles" on the >html tag, and wrapping the <TextEditor in a <div class="baboolastyles".  
+  
+import TextEditor from "baboolatexteditor/src/App.tsx"
+
+
+# Usage (as website)
+
 
 ```bash
 $ npm install # or pnpm install or yarn install
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
-
+ 
 ## Available Scripts
 
 In the project directory, you can run:
