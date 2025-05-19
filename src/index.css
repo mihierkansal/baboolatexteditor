@@ -25,6 +25,10 @@
   gap: 0.5rem !important;
 }
 
+.attn {
+  border: 1px solid #4488aa !important;
+}
+
 input {
   flex-grow: 1 !important;
 }

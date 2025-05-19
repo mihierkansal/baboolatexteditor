@@ -118,6 +118,9 @@ function App() {
             EditorView.updateListener.of(() => {
               const newContent = _editor.state.doc.toString();
 
+              if (contents[0]() !== newContent) {
+                lastChangeSaved[1](false);
+              }
               contents[1](newContent);
             }),
           ],
@@ -152,8 +155,12 @@ function App() {
       } else {
         download();
       }
+      lastChangeSaved[1](true);
     }
   });
+
+  //Since editor starts out empty there is nothing to save
+  const lastChangeSaved = createSignal(true);
 
   return (
     <>
@@ -179,6 +186,7 @@ function App() {
               document.body.appendChild(inp);
               inp.click();
             }
+            lastChangeSaved[1](true);
           }}
         >
           <span>Open From PC</span>
@@ -200,14 +208,22 @@ function App() {
           <button
             onClick={async () => {
               saveAs();
+              lastChangeSaved[1](true);
             }}
           >
             <span>Save As</span>
           </button>
           <button
-            disabled={!fileHandle[0]()}
+            classList={{
+              attn: !lastChangeSaved[0](),
+            }}
             onClick={async () => {
-              await writeToFile(fileHandle[0]()!, contents[0]());
+              if (!fileHandle[0]()) {
+                saveAs();
+              } else {
+                await writeToFile(fileHandle[0]()!, contents[0]());
+              }
+              lastChangeSaved[1](true);
             }}
           >
             <span>Save</span>
