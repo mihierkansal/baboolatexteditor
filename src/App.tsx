@@ -23,8 +23,6 @@ import { php } from "@codemirror/lang-php";
 import { csharp } from "@replit/codemirror-lang-csharp";
 import "baboolastyles/public/plastic.css";
 
-// import { oneDark } from '@codemirror/theme-one-dark';
-
 function App() {
   const filename = createSignal("Untitled.txt");
   const contents = createSignal("");
@@ -118,8 +116,9 @@ function App() {
             isCode ? basicSetup : minimalSetup,
             EditorView.lineWrapping,
             EditorView.updateListener.of(() => {
-              console.log("chng");
-              contents[1](_editor.state.doc.toString());
+              const newContent = _editor.state.doc.toString();
+
+              contents[1](newContent);
             }),
           ],
           parent: targetElement,
